@@ -43,6 +43,8 @@ function bundle_install_local {
     unset RUBYOPT BUNDLE_BIN_PATH GEM_PATH GEM_HOME BUNDLE_GEMFILE
     puts-step "Installing local gems dependencies (bundle install --local --deployment)"
     #  TODO: holding nose... this just to prevent bundler from reaching out to github. a better solution is needed
+    puts-step `ls -l $BUILD_DIR`
+    puts-step "'s/, git:.*//g' ${BUILD_DIR}/Gemfile > ${BUILD_DIR}/Gemfile.cleaned"
     sed 's/, git:.*//g' "${BUILD_DIR}/Gemfile" > "${BUILD_DIR}/Gemfile.cleaned"
     puts-step "Scrubbed github refs from ${BUILD_DIR}/Gemfile"
     bundle install --verbose --local --deployment --gemfile "${BUILD_DIR}/Gemfile.cleaned" 2>&1 | indent
