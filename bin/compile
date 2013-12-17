@@ -44,10 +44,11 @@ function bundle_install_local {
     puts-step "Installing local gems dependencies (bundle install --local --deployment)"
     #  TODO: holding nose... this just to prevent bundler from reaching out to github. a better solution is needed
     puts-step `ls -l $BUILD_DIR`
-    puts-step "'s/, git:.*//g' ${BUILD_DIR}/Gemfile > ${BUILD_DIR}/Gemfile.cleaned"
-    sed 's/, git:.*//g' "${BUILD_DIR}/Gemfile" > "${BUILD_DIR}/Gemfile.cleaned"
+    cp -v "${BUILD_DIR}/Gemfile" "${BUILD_DIR}/Gemfile.back"
+    puts-step "'s/, git:.*//g' ${BUILD_DIR}/Gemfile.back > ${BUILD_DIR}/Gemfile"    
+    sed 's/, git:.*//g' "${BUILD_DIR}/Gemfile.back" > "${BUILD_DIR}/Gemfile"
     puts-step "Scrubbed github refs from ${BUILD_DIR}/Gemfile"
-    bundle install --verbose --local --deployment --gemfile "${BUILD_DIR}/Gemfile.cleaned" 2>&1 | indent
+    bundle install --verbose --local --deployment 2>&1 | indent
 }
 
 function bundle_install_with_cache {
